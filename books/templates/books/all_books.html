@@ -1,0 +1,45 @@
+<h1 class="text-2xl font-bold mb-4">Books for Borrow and Return</h1>
+<div class="flex flex-wrap p-4 bg-gray-100">
+  <div class="w-full md:w-1/4 lg:w-1/6 bg-white p-3 rounded shadow">
+    <h5 class="text-lg font-semibold mb-3">All Categories</h5>
+    {% for cat in category %}
+    <div class="form-check mb-2">
+      <input class="form-check-input" type="radio" name="category" id="{{ cat.slug }}" value="{{ cat.slug }}" 
+             {% if current_category == cat.slug %}checked{% endif %} 
+             onchange="window.location.href='{% url 'category_wise_post' cat.slug %}'" 
+             class="form-radio text-indigo-600 h-4 w-4 transition duration-150 ease-in-out"/>
+      <label class="form-check-label ml-2 text-gray-700" for="{{ cat.slug }}">
+        {{ cat.name }}
+      </label>
+    </div>
+    {% endfor %}
+    <div class="form-check mb-2">
+      <input class="form-check-input" type="radio" name="category" id="all-category" value="" 
+             {% if not current_category %}checked{% endif %} 
+             onchange="window.location.href='{% url 'home' %}'" 
+             class="form-radio text-indigo-600 h-4 w-4 transition duration-150 ease-in-out"/>
+      <label class="form-check-label ml-2 text-gray-700" for="all-category">
+        All Categories
+      </label>
+    </div>
+  </div>
+  <div class="w-full md:w-3/4 lg:w-5/6 p-3">
+    <h4 class="text-xl font-semibold mb-5">{{ books | length }} results found</h4>
+    <div class="flex flex-wrap h-full -mx-2">
+      {% for book in books %}
+      <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2 mb-4">
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+          <img src="{{ book.image.url }}" alt="{{ book.title }}" class="w-full h-48 object-cover"/>
+          <div class="p-4">
+            <h5 class="text-lg font-bold">{{ book.title }}</h5>
+            <p class="text-gray-700">{{ book.price }}</p>
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'book_detail' book.id %}" class="mt-2 inline-block bg-indigo-600 text-white text-sm font-semibold py-2 px-4 rounded hover:bg-indigo-500 transition duration-150">View Details</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
